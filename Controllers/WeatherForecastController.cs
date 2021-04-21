@@ -33,22 +33,36 @@ namespace TestAPI.Controllers
         {
             System.Console.WriteLine("entered the method");
             string token = Helper.GetTokenFromRequest(this.Request);
-
             var response = await Helper.Sendrequest("", Method.GET, token);
             if (response.IsSuccessful)
             {
                 return Ok(new { response = "success2" });
             }
-            return Ok(new { error = "not signed in" });
+            return Ok(new { error = "access denied" });
+        }
 
-            // var rng = new Random();
-            // return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            // {
-            //     Date = DateTime.Now.AddDays(index),
-            //     TemperatureC = rng.Next(-20, 55),
-            //     Summary = Summaries[rng.Next(Summaries.Length)]
-            // })
-            // .ToArray();
+        [HttpGet("isadmin")]
+        public async Task<ActionResult> GetAdmin()
+        {
+            string token = Helper.GetTokenFromRequest(this.Request);
+            var response = await Helper.Sendrequest("/isadmin", Method.GET, token);
+            if (response.IsSuccessful)
+            {
+                return Ok(new { response = "success2" });
+            }
+            return Ok(new { error = "access denied" });
+        }
+
+        [HttpGet("ismoderator")]
+        public async Task<ActionResult> GetMod()
+        {
+            string token = Helper.GetTokenFromRequest(this.Request);
+            var response = await Helper.Sendrequest("/ismoderator", Method.GET, token);
+            if (response.IsSuccessful)
+            {
+                return Ok(new { response = "success2" });
+            }
+            return Ok(new { error = "access denied" });
         }
 
     }

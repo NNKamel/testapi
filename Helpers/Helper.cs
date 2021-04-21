@@ -53,7 +53,7 @@ namespace TestAPI.Helpers
         {
             // System.Console.WriteLine("baseUrl+urlExtension");
             // System.Console.WriteLine("baseUrl" + urlExtension);
-            var client = new RestClient("https://localhost:5001/Authentication");
+            var client = new RestClient("https://localhost:5001/Authentication" + urlExtension);
             client.Timeout = -1;
             var request = new RestRequest(method);
             request.AddHeader("Content-Type", "application/json");

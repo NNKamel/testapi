@@ -47,17 +47,17 @@ namespace TestAPI
             });
 
             // for authentication
-            // string domain = $"https://{Configuration["Auth0:Domain"]}/";
+            // // string domain = $"https://{Configuration["Auth0:Domain"]}/";
             // string domain = "https://localhost:5001/Authentication";
             // services.AddAuthentication(options =>
             // {
             //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             // }).AddJwtBearer(options =>
             // {
             //     options.Authority = domain;
             //     // options.Audience = "Configuration["Auth0:Audience"]";
-            //     options.Audience = "https://cinephiliacs-api/";
+            //     // options.Audience = "https://cinephiliacs-api/";
             //     options.TokenValidationParameters = new TokenValidationParameters
             //     {
             //         NameClaimType = ClaimTypes.NameIdentifier
@@ -85,7 +85,7 @@ namespace TestAPI
             app.UseRouting();
             app.UseCors("_corsPolicy");
 
-            // app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
