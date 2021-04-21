@@ -33,19 +33,14 @@ namespace TestAPI.Controllers
         {
             System.Console.WriteLine("entered the method");
             string token = Helper.GetTokenFromRequest(this.Request);
-            try
+
+            var response = await Helper.Sendrequest("", Method.GET, token);
+            if (response.IsSuccessful)
             {
-                var response = await Helper.Sendrequest("", Method.GET, token);
-                if (response.IsSuccessful)
-                {
-                    return Ok(new { response = "success2" });
-                }
-            }
-            catch (System.Exception)
-            {
-                return Ok(new { error = "not signed in" });
+                return Ok(new { response = "success2" });
             }
             return Ok(new { error = "not signed in" });
+
             // var rng = new Random();
             // return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             // {
