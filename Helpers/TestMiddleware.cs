@@ -50,6 +50,11 @@ namespace TestAPI.Helpers
                     var identity = new ClaimsIdentity(claims, "basic");
                     context.User = new ClaimsPrincipal(identity);
                 }
+                var claims1 = new List<Claim>();
+                claims1.Add(new Claim("access", "false"));
+                // context.User.Claims.Append();
+                var identity1 = new ClaimsIdentity(claims1, "basic");
+                context.User = new ClaimsPrincipal(identity1);
 
 
                 // var tokenString = authHeader
@@ -81,10 +86,10 @@ namespace TestAPI.Helpers
         }
     }
 
-    class PermissionObj
-    {
-        public string access { get; set; }
-        public List<string> permissions { get; set; }
-    }
+    // class PermissionObj
+    // {
+    //     public string access { get; set; }
+    //     public List<string> permissions { get; set; }
+    // }
 
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +35,7 @@ namespace TestAPI
             services.AddControllers();
 
             var permissions = new[] {
-                "loggedin", // for signed in
+                // "loggedin", // for signed in
                 "manage:forums", // for moderator (is signed in)
                 "manage:awebsite", // for admin (is moderator and signed in)
             };
@@ -52,6 +53,12 @@ namespace TestAPI
             });
 
             // for authentication
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = "scheme";
+            })
+            .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>(
+                "scheme", o => { });
             // services.AddAuthentication("loggedin");
             // // string domain = $"https://{Configuration["Auth0:Domain"]}/";
             // string domain = "https://localhost:5001/Authentication";
@@ -99,7 +106,7 @@ namespace TestAPI
             app.UseRouting();
             app.UseCors("_corsPolicy");
 
-            app.UseMiddleware<TestMiddleware>();
+            // app.UseMiddleware<TestMiddleware>();
             app.UseAuthentication();
 
             app.UseAuthorization();

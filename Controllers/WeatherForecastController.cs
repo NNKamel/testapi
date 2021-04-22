@@ -24,21 +24,23 @@ namespace TestAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize("loggedin")]
+        // [Authorize("loggedin")]
+        [Authorize]
         public async Task<ActionResult> Get()
         {
             this.User.Claims.ToList().ForEach(claim =>
             {
                 System.Console.WriteLine("claim type: " + claim.Type + " value: " + claim.Value);
             });
-            System.Console.WriteLine("entered the method");
-            string token = Helper.GetTokenFromRequest(this.Request);
-            var response = await Helper.Sendrequest("", Method.GET, token);
-            if (response.IsSuccessful)
-            {
-                return Ok(new { response = "success2" });
-            }
-            return Ok(new { error = "access denied" });
+            return Ok(new { response = "success2" });
+
+            // return Ok(new { error = "access denied" });
+        }
+
+        [HttpGet("loggedout")]
+        public async Task<ActionResult> GetNotSignedin()
+        {
+            return Ok(new { response = "success2" });
         }
 
         [HttpGet("isadmin")]
