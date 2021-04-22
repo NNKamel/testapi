@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TestAPI.Helpers;
 
 namespace TestAPI
 {
@@ -32,7 +33,11 @@ namespace TestAPI
 
             services.AddControllers();
 
-
+            var permissions = new[] {
+                "loggedin", // for signed in
+                "manage:forums", // for moderator (is signed in)
+                "manage:awebsite", // for admin (is moderator and signed in)
+            };
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "_corsPolicy",
@@ -47,6 +52,7 @@ namespace TestAPI
             });
 
             // for authentication
+            // services.AddAuthentication("loggedin");
             // // string domain = $"https://{Configuration["Auth0:Domain"]}/";
             // string domain = "https://localhost:5001/Authentication";
             // services.AddAuthentication(options =>
@@ -63,6 +69,14 @@ namespace TestAPI
             //         NameClaimType = ClaimTypes.NameIdentifier
             //     };
             // });
+
+            services.AddAuthorization(options =>
+            {
+                for (int i = 0; i < permissions.Length; i++)
+                {
+                    options.AddPolicy(permissions[i], policy => policy.RequireClaim(permissions[i], "true"));
+                }
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -85,6 +99,7 @@ namespace TestAPI
             app.UseRouting();
             app.UseCors("_corsPolicy");
 
+            app.UseMiddleware<TestMiddleware>();
             app.UseAuthentication();
 
             app.UseAuthorization();

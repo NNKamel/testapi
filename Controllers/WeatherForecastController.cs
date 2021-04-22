@@ -15,10 +15,6 @@ namespace TestAPI.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private readonly ILogger<WeatherForecastController> _logger;
 
@@ -28,9 +24,13 @@ namespace TestAPI.Controllers
         }
 
         [HttpGet]
-        // [Authorize]
+        [Authorize("loggedin")]
         public async Task<ActionResult> Get()
         {
+            this.User.Claims.ToList().ForEach(claim =>
+            {
+                System.Console.WriteLine("claim type: " + claim.Type + " value: " + claim.Value);
+            });
             System.Console.WriteLine("entered the method");
             string token = Helper.GetTokenFromRequest(this.Request);
             var response = await Helper.Sendrequest("", Method.GET, token);
@@ -42,6 +42,7 @@ namespace TestAPI.Controllers
         }
 
         [HttpGet("isadmin")]
+        [Authorize("manage:awebsite")]
         public async Task<ActionResult> GetAdmin()
         {
             string token = Helper.GetTokenFromRequest(this.Request);
@@ -54,6 +55,7 @@ namespace TestAPI.Controllers
         }
 
         [HttpGet("ismoderator")]
+        [Authorize("manage:forums")]
         public async Task<ActionResult> GetMod()
         {
             string token = Helper.GetTokenFromRequest(this.Request);
