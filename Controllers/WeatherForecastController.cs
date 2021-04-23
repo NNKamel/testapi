@@ -32,7 +32,7 @@ namespace TestAPI.Controllers
             {
                 System.Console.WriteLine("claim type: " + claim.Type + " value: " + claim.Value);
             });
-            return Ok(new { response = "success2" });
+            return Ok(new { response = "testapi: success" });
 
             // return Ok(new { error = "access denied" });
         }
@@ -40,33 +40,21 @@ namespace TestAPI.Controllers
         [HttpGet("loggedout")]
         public async Task<ActionResult> GetNotSignedin()
         {
-            return Ok(new { response = "success2" });
+            return Ok(new { response = "testapi: success" });
         }
 
         [HttpGet("isadmin")]
         [Authorize("manage:awebsite")]
         public async Task<ActionResult> GetAdmin()
         {
-            string token = Helper.GetTokenFromRequest(this.Request);
-            var response = await Helper.Sendrequest("/isadmin", Method.GET, token);
-            if (response.IsSuccessful)
-            {
-                return Ok(new { response = "success2" });
-            }
-            return Ok(new { error = "access denied" });
+            return Ok(new { response = "testapi: success" });
         }
 
         [HttpGet("ismoderator")]
         [Authorize("manage:forums")]
         public async Task<ActionResult> GetMod()
         {
-            string token = Helper.GetTokenFromRequest(this.Request);
-            var response = await Helper.Sendrequest("/ismoderator", Method.GET, token);
-            if (response.IsSuccessful)
-            {
-                return Ok(new { response = "success2" });
-            }
-            return Ok(new { error = "access denied" });
+            return Ok(new { response = "testapi: success" });
         }
 
     }
