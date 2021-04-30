@@ -42,6 +42,8 @@ namespace TestAPI.Controllers
         public async Task<ActionResult> GetData()
         {
             var response = await Helper.Sendrequest("/userdata", Method.GET, Helper.GetTokenFromRequest(this.Request));
+            Dictionary<string, string> dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
+            var userid = dictionary["sub"];
             return Ok(new { response = response.Content });
         }
 
@@ -69,9 +71,17 @@ namespace TestAPI.Controllers
         [Authorize]
         public async Task<ActionResult> AddAdmin()
         {
-            var response = await Helper.Sendrequest("/role/Admin", Method.POST, Helper.GetTokenFromRequest(this.Request));
+            var response1 = await Helper.Sendrequest("/userdata", Method.GET, Helper.GetTokenFromRequest(this.Request));
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(response1.Content);
+            string userid = dictionary["sub"];
+            var response = await Helper.Sendrequest("/role/Admin", Method.POST, Helper.GetTokenFromRequest(this.Request), userid);
             System.Console.WriteLine("response: " + response.Content);
             return Ok(new { response = "testapi: success" });
+        }
+
+        private int Dictionary<T1, T2>(T2 content)
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet("removeadmin")]

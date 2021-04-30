@@ -34,11 +34,6 @@ namespace TestAPI
 
             services.AddControllers();
 
-            var permissions = new[] {
-                // "loggedin", // for signed in
-                "manage:forums", // for moderator (is signed in)
-                "manage:awebsite", // for admin (is moderator and signed in)
-            };
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "_corsPolicy",
@@ -59,24 +54,12 @@ namespace TestAPI
             })
             .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>(
                 "scheme", o => { });
-            // services.AddAuthentication("loggedin");
-            // // string domain = $"https://{Configuration["Auth0:Domain"]}/";
-            // string domain = "https://localhost:5001/Authentication";
-            // services.AddAuthentication(options =>
-            // {
-            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //     // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            // }).AddJwtBearer(options =>
-            // {
-            //     options.Authority = domain;
-            //     // options.Audience = "Configuration["Auth0:Audience"]";
-            //     // options.Audience = "https://cinephiliacs-api/";
-            //     options.TokenValidationParameters = new TokenValidationParameters
-            //     {
-            //         NameClaimType = ClaimTypes.NameIdentifier
-            //     };
-            // });
 
+            var permissions = new[] {
+                // "loggedin", // for signed in
+                "manage:forums", // for moderator (is signed in)
+                "manage:awebsite", // for admin (is moderator and signed in)
+            };
             services.AddAuthorization(options =>
             {
                 for (int i = 0; i < permissions.Length; i++)

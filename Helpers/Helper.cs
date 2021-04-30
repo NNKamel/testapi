@@ -1,12 +1,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RestSharp;
 
 namespace TestAPI.Helpers
 {
-    class Helper
+    static class Helper
     {
+        // private static readonly string _authUrl = "http://20.45.0.16/Authentication";
+        private static readonly string _authUrl = "http://localhost:5005/Authentication";
+
         /// <summary>
         /// Extract token from request
         /// </summary>
@@ -17,31 +21,6 @@ namespace TestAPI.Helpers
             return request.Headers.FirstOrDefault(h => h.Key == "Authorization").Value;
         }
 
-
-        /// <summary>
-        /// Get user dictionary from Auth0 using the current request.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>A dictionary of user data</returns>
-        // public async Task<Dictionary<string, string>> GetUserAuth0Dictionary(Microsoft.AspNetCore.Http.HttpRequest request)
-        // {
-        //     string token = GetTokenFromRequest(request);
-        //     IRestResponse response = await Sendrequest("/userinfo", Method.GET, token);
-        //     System.Console.WriteLine("user data:");
-        //     Console.WriteLine(response.Content);
-        //     System.Console.WriteLine("response status");
-        //     Console.WriteLine(response.StatusCode);
-        //     Console.WriteLine(response.IsSuccessful);
-        //     if (response.IsSuccessful)
-        //     {
-        //         return JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
-        //     }
-        //     else
-        //     {
-        //         return null;
-        //     }
-        // }
-
         /// <summary>
         /// Send request to Auth0
         /// </summary>
@@ -49,15 +28,17 @@ namespace TestAPI.Helpers
         /// <param name="method"></param>
         /// <param name="token"></param>
         /// <returns>The response of the request</returns>
-        public async static Task<IRestResponse> Sendrequest(string urlExtension, Method method, string token)
+        public async static Task<IRestResponse> Sendrequest(string urlExtension, Method method, string token, dynamic body = null)
         {
-            // System.Console.WriteLine("baseUrl+urlExtension");
-            // System.Console.WriteLine("baseUrl" + urlExtension);
-            var client = new RestClient("https://localhost:5001/Authentication" + urlExtension);
+            var client = new RestClient(_authUrl + urlExtension);
             client.Timeout = -1;
             var request = new RestRequest(method);
             request.AddHeader("Content-Type", "application/json");
             request.AddHeader("Authorization", token);
+            if (body != null)
+            {
+                request.AddParameter("application/json", JsonConvert.SerializeObject(body), ParameterType.RequestBody);
+            }
             IRestResponse response = await client.ExecuteAsync(request);
             Console.WriteLine("response.Content");
             Console.WriteLine(response.Content);
